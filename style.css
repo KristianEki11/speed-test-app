@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap');
+
+body {
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Style untuk animasi smooth pada angka */
+.metric-value {
+    /* Transisi untuk font-size dihapus untuk mencegah efek bergerak yang aneh */
+    transition: color 0.5s ease-in-out, text-shadow 0.5s ease-in-out, opacity 0.5s ease;
+    /* Ukuran font default diatur di sini, akan disesuaikan oleh JS */
+    font-size: 2.25rem; /* Ukuran awal setara text-4xl */
+    line-height: 1; /* Menjaga konsistensi tinggi baris */
+}
+
+/* Efek glow saat pengujian aktif */
+.testing-glow {
+    box-shadow: 0 0 15px 5px rgba(59, 130, 246, 0.4);
+    border-color: rgba(59, 130, 246, 0.7);
+}

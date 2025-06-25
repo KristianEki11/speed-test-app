@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speed Test Realtime (Simulasi)</title>
+    
+    <!-- Memuat Tailwind CSS dari CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Memuat Lucide Icons dari CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Menghubungkan ke file CSS kustom Anda -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-900 text-white flex items-center justify-center min-h-screen p-4">
+
+    <!-- Tombol Pengganti Bahasa -->
+    <div class="absolute top-4 right-4 z-10">
+        <button id="lang-switch-btn" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-colors text-sm">EN</button>
+    </div>
+
+    <div class="w-full max-w-4xl mx-auto">
+        <header class="text-center mb-6">
+            <h1 class="text-4xl md:text-5xl font-bold text-white" data-lang-key="title">Speed Test Realtime (Simulasi)</h1>
+            <p id="status-text" class="text-blue-400 mt-2 text-lg transition-opacity duration-500" data-lang-key="status_initializing">Menginisialisasi pengukuran...</p>
+        </header>
+
+        <!-- Kontrol untuk mode simulasi -->
+        <div id="simulation-controls" class="mb-6 bg-gray-800/50 p-4 rounded-xl flex flex-col sm:flex-row items-center justify-center gap-3">
+            <label for="speed-input" class="text-gray-300" data-lang-key="your_speed">Kecepatan Internet Anda (Mbps):</label>
+            <input type="number" id="speed-input" value="100" class="bg-gray-700 text-white w-24 text-center rounded-md p-2 border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            <button id="set-speed-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors" data-lang-key="set_button">Atur</button>
+        </div>
+        <p id="simulation-notice" class="text-xs text-gray-500 text-center mb-8 -mt-4" data-lang-key="simulation_notice">Aplikasi ini berjalan dalam mode simulasi. Atur kecepatan di atas untuk kalibrasi.</p>
+
+        <!-- Kontainer untuk metrik utama -->
+        <main class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <!-- Card Download -->
+            <div id="download-card" class="bg-gray-800/50 backdrop-blur-sm border border-gray-700 p-6 rounded-2xl flex items-center space-x-4 md:space-x-6 transition-all duration-300 md:col-span-1">
+                <div class="bg-blue-500/20 p-4 rounded-full flex-shrink-0">
+                    <i data-lucide="arrow-down-to-line" class="w-8 h-8 text-blue-400"></i>
+                </div>
+                <div class="min-w-0 flex-1">
+                    <p class="text-gray-400 text-lg" data-lang-key="download_label">Download</p>
+                    <div class="flex items-baseline space-x-2">
+                        <span id="download-speed" class="metric-value font-bold text-white">0.00</span>
+                        <span class="text-gray-400">Mbps</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card Upload -->
+            <div id="upload-card" class="bg-gray-800/50 backdrop-blur-sm border border-gray-700 p-6 rounded-2xl flex items-center space-x-4 md:space-x-6 transition-all duration-300 md:col-span-1">
+                 <div class="bg-green-500/20 p-4 rounded-full flex-shrink-0">
+                    <i data-lucide="arrow-up-from-line" class="w-8 h-8 text-green-400"></i>
+                </div>
+                <div class="min-w-0 flex-1">
+                    <p class="text-gray-400 text-lg" data-lang-key="upload_label">Upload</p>
+                     <div class="flex items-baseline space-x-2">
+                        <span id="upload-speed" class="metric-value font-bold text-white">0.00</span>
+                        <span class="text-gray-400">Mbps</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card Latency & Ping (Digabung) -->
+            <div id="latency-ping-card" class="bg-gray-800/50 backdrop-blur-sm border border-gray-700 p-6 rounded-2xl flex items-center space-x-4 md:space-x-6 transition-all duration-300 md:col-span-1">
+                <div class="bg-yellow-500/20 p-4 rounded-full flex-shrink-0">
+                    <i data-lucide="timer" class="w-8 h-8 text-yellow-400"></i>
+                </div>
+                <div class="min-w-0 flex-1">
+                    <p class="text-gray-400 text-lg" data-lang-key="latency_label">Latency / Ping</p>
+                    <div class="flex items-baseline space-x-2">
+                        <span id="latency" class="metric-value font-bold text-white">--</span>
+                        <span class="text-gray-400">ms</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Kontainer untuk metrik rata-rata -->
+        <footer class="bg-gray-800/30 backdrop-blur-sm border border-gray-700 p-6 rounded-2xl">
+            <h3 class="text-xl font-bold mb-4 text-center text-gray-300" data-lang-key="avg_title">Rata-rata Pengukuran</h3>
+            <div class="grid grid-cols-3 gap-4 text-center">
+                <div>
+                    <p class="text-gray-400 text-sm" data-lang-key="avg_download_label">Avg. Download</p>
+                    <p class="text-xl font-semibold"><span id="avg-download">0.00</span> Mbps</p>
+                </div>
+                 <div>
+                    <p class="text-gray-400 text-sm" data-lang-key="avg_upload_label">Avg. Upload</p>
+                    <p class="text-xl font-semibold"><span id="avg-upload">0.00</span> Mbps</p>
+                </div>
+                <div>
+                    <p class="text-gray-400 text-sm" data-lang-key="avg_latency_label">Avg. Latency</p>
+                    <p class="text-xl font-semibold"><span id="avg-latency">--</span> ms</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Menghubungkan ke file JavaScript Anda. Letakkan di akhir body untuk performa lebih baik -->
+    <script src="script.js"></script>
+</body>
+</html>
